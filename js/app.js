@@ -1,13 +1,10 @@
 //This is the model.
 var locations;
+var glob = this;
 $.getJSON("locations.json", function(json) {
   console.log(json);
-  locations = json;
-  console.log(locations);
+  this.locations = json;
 });
-
-
-
 
 console.log(locations);
 //Here's the view.
