@@ -1,17 +1,17 @@
 //This is the model.
 var locations = [];
-window = this;
+var glob = this;
 $.getJSON("locations.json", function(json) {
   console.log(json);
   json.forEach(function(locItem){
-    window.locations.push(locItem);
+    glob.locations.push(locItem);
   });
 });
 
-console.log(locations);
+console.log(glob.locations);
 //Here's the view.
 var ViewModel = function() {
-  this.locList = ko.observableArray(window.locations);
+  this.locList = ko.observableArray(glob.locations);
 };
 
 ko.applyBindings(new ViewModel());
