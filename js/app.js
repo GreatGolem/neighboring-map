@@ -3,7 +3,7 @@ var model = function() {
   var loc = this;
   $.getJSON("locations.json", function(json) {
     console.log(json);
-    loc.locations = ko.observable(json);
+    loc.locations = ko.observableArray(json);
   });
 
 }
