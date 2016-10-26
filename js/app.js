@@ -1,5 +1,5 @@
 //This is the model.
-var locations;
+var locations = [];
 $.getJSON("locations.json", function(json) {
   console.log(json);
   json.forEach(function(locItem){
