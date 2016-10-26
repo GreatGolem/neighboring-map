@@ -3,7 +3,7 @@ var locations;
 var glob = this;
 $.getJSON("locations.json", function(json) {
   console.log(json);
-  glob.locations = json;
+  window.locations = json;
 });
 
 console.log(locations);
