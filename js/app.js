@@ -1,7 +1,13 @@
 //This is the model.
-$.getJSON("locations.json", function(json) {
-  console.log(json); // this will show the info it in firebug console
-});
+var model = function() {
+  var loc = this;
+  $.getJSON("locations.json", function(json) {
+    console.log(json);
+    loc.locations = ko.observable(json);
+  });
+
+}
+
 
 
 
@@ -9,3 +15,5 @@ $.getJSON("locations.json", function(json) {
 var sidebarView = function() {
 
 };
+
+ko.applyBindings();

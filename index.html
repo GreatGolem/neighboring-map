@@ -9,7 +9,11 @@
   <title>Map of My Life in Purdue</title>
 </head>
 <body>
-  <div class="sidebar col-md-3"></div>
+  <div class="sidebar col-md-3">
+    <ul data-binding="foreach: locations">
+      <li data-binding="text: name"></li>
+    </ul>
+  </div>
   <div class="map"></div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="js/lib/knockout-3.4.0.js"></script>
