@@ -3,6 +3,7 @@ var locations;
 $.getJSON("locations.json", function(json) {
   console.log(json);
   locations = json;
+  console.log(locations);
 });
 
 
