@@ -11,8 +11,7 @@ $.getJSON("locations.json", function(json) {
 
 //Here's the view.
 var ViewModel = function() {
-  var self = this;
-  var locList = ko.observableArray(locations);
+  this.locList = ko.observableArray(locations);
 };
 
 ko.applyBindings(new ViewModel());
