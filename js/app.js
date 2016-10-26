@@ -2,7 +2,9 @@
 var locations;
 $.getJSON("locations.json", function(json) {
   console.log(json);
-  window.locations = json;
+  json.forEach(function(locItem){
+    window.locations.push(locItem);
+  });
 });
 
 console.log(locations);
