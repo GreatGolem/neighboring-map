@@ -1,9 +1,8 @@
 //This is the model.
 var locations;
-
 $.getJSON("locations.json", function(json) {
   console.log(json);
-  global.locations = json;
+  window.locations = json;
 });
 
 console.log(locations);
