@@ -3,7 +3,7 @@ var locations = [];
 $.getJSON("locations.json", function(json) {
   console.log(json);
   json.forEach(function(locItem){
-    locations.push(locItem);
+    VW.push(locItem);
   });
 });
 
@@ -12,6 +12,6 @@ console.log(locations);
 var ViewModel = function() {
   this.locList = ko.observableArray(locations);
 };
-ko.applyBindings(new ViewModel());
+ko.applyBindings(VW = new ViewModel());
 
 
