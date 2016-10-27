@@ -5,7 +5,7 @@ $.getJSON("locations.json", function(json) {
   //Add locations to the list and add marker to the map.
   json.forEach(function(locItem){
     VW.locList.push(locItem);
-    var marker = new google.map.Marker({
+    var marker = new google.maps.Marker({
       position: latlng,
       map: initMap()
     });

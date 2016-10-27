@@ -3,7 +3,7 @@ import json,os
 data = [
     {
         'name' : 'Home',
-        'latlng' : '',
+        'latlng' : {'lat': 40.454828, 'lng': -86.920855},
         'description' : 'Home. Sweet home.'
     }, {
         'name' : 'Lab',
