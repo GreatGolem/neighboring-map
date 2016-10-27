@@ -5,13 +5,13 @@ $.getJSON("locations.json", function(json) {
   json.forEach(function(locItem){
     locations.push(locItem);
   });
-  ko.applyBindings(ViewModel);
 });
 
 console.log(locations);
 //Here's the view.
-var ViewModel = {
-  locList: ko.observableArray(locations)
+var ViewModel = function() {
+  this.locList = ko.observableArray(locations);
 };
+ko.applyBindings(new ViewModel);
 
 
