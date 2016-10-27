@@ -10,7 +10,7 @@ $.getJSON("locations.json", function(json) {
 
 console.log(locations);
 //Here's the view.
-var ViewModel = function() {
+var ViewModel = {
   this.locList = ko.observableArray(locations);
 };
 
