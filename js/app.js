@@ -5,7 +5,7 @@ $.getJSON("locations.json", function(json) {
   json.forEach(function(locItem){
     locations.push(locItem);
   });
-  ko.applyBindings(new ViewModel());
+  ko.applyBindings(ViewModel());
 });
 
 console.log(locations);
