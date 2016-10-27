@@ -12,6 +12,6 @@ console.log(locations);
 var ViewModel = function() {
   this.locList = ko.observableArray(locations);
 };
-ko.applyBindings(new ViewModel);
+ko.applyBindings(new ViewModel());
 
 
