@@ -3,7 +3,7 @@ var locations = [];
 $.getJSON("locations.json", function(json) {
   console.log(json);
   json.forEach(function(locItem){
-    VW.push(locItem);
+    VW.locList.push(locItem);
   });
 });
 
