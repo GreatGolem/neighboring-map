@@ -6,7 +6,7 @@ $.getJSON("locations.json", function(json) {
   json.forEach(function(locItem){
     VW.locList.push(locItem);
     var marker = new google.maps.Marker({
-      position: latlng,
+      position: locItem.latlng,
       map: initMap()
     });
   });
