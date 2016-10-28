@@ -22,6 +22,72 @@ html, body {
   width: 200px;
   position: absolute;
   top: 0px;
+  transition: 0.8s;
+  left: -170px;
+}
+
+.title {
+  text-align: center;
+  font-size: 20px;
+}
+
+#line1 {
+  margin-bottom: 0;
+}
+
+#line2 {
+  margin-top: 0;
+}
+
+#searchdiv {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0px;
+  margin-left: 10px;
+}
+
+.expand {
   left: 0px;
+}
+
+.sidebar-content {
+  width: 170px;
+  height: 100%;
+  margin: 0;
+  float: left;
   padding-top: 80px;
+  background-color: orange;
+}
+
+.sidebar-hamburger {
+  float: right;
+  height: 100%;
+  width: 30px;
+  padding: 0;
+  margin: 0;
+}
+
+.hbg-button {
+  padding: 0;
+  margin: 0;
+  top: 200px;
+  width: 30px;
+  border: none;
+  margin-top: 80px;
+}
+
+#hbg-icon {
+  width: 30px;
+  background-color: orange;
+  padding: 4px;
+}
+
+#locList {
+  padding-left: 10px;
+}
+
+.list-item {
+  width: 90%;
+  padding: 0;
+  margin: 0;
 }
