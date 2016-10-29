@@ -103,32 +103,57 @@ function initMap() {
       title: item.name
     });
     map.markerList.push(marker);
+    var contentStr =
+      '<h5 class="info-title">' + item.name + '</h5>' +
+      '<div class="info-description">' + item.description + '</div>';
     var infowindow = new google.maps.InfoWindow({
-      content: item.description
+      content: contentStr
     });
+    //When a marker is clicked map is refreshed first
+    //then the infowindow is opened for that marker.
     marker.addListener('click', function(){
-      map.clearInfoWindow();
+      map.clear();
       infowindow.open(map, marker);
+      console.log(infowindow.getContent());
+      var oauth_timestamp = Math.round((new Date()).getTime() / 1000.0);
+      var yelpTokenURL = "https://api.yelp.com/v2/search?location=Lafayette+Indiana&cll=" +
+        item.latlng.lat + "," + item.latlng.lng +
+        "&oauth_consumer_key=cwAkA1CeBkJRJSLXkOSACA" +
+        "&oauth_token=kTvQQiFDp-nmuSo-9knHy8AJRYcSGHiO" +
+        "&oauth_signature_method=hmac-sha1" +
+        "&oauth_signature=lXPciYrzGzE5033h_acN0aazL7s" +
+        "&oauth_timestamp=" + oauth_timestamp.toString() +
+        "&oauth_nonce=" + oauth_timestamp.toString();
+      $.ajax({
+        url: yelpTokenURL,
+        success: function(response) {
+          infowindow.setContent(
+            infowindow.getContent() +
+            '<div class="info-yelp"></div>'
+          );
+        }
+      });
     });
     map.infowindowList.push(infowindow);
   })
   //an update function to show/hide markers
   //and center the map to selected location
   map.update = function() {
-    this.clearInfoWindow();
+    this.clear();
     for(i=0;i<data.locations.length;i++) {
-      this.markerList[i].setVisible(data.locations[i].visible);
       if(data.selected == data.locations[i].name) {
         this.panTo(data.locations[i].latlng);
         this.infowindowList[i].open(map, map.markerList[i]);
+        this.markerList[i].setAnimation(google.maps.Animation.BOUNCE);
       }
     }
   }
 
-  //a tool function to close all infowindows
-  map.clearInfoWindow = function() {
-    for(i=0;i<map.infowindowList.length;i++) {
+  //a tool function to close all infowindows and cancel all animations
+  map.clear = function() {
+    for(i=0;i<data.locations.length;i++) {
       map.infowindowList[i].close();
+      map.markerList[i].setAnimation();
     }
   }
 }
