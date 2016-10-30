@@ -41,7 +41,7 @@ var data = {
     }, {
         name : 'Purdue Memorial Union',
         latlng : {lat: 40.424700, lng: -86.911325},
-        description : 'Fulled with restaurants and other random facilities.',
+        description : 'Filled with restaurants and other random facilities.',
         visible : true
     }, {
         name : 'Yichiban',
