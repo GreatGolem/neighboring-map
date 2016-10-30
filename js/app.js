@@ -19,12 +19,12 @@ var data = {
   selected: 'NA',
   locations: [
     {
-        name : 'Home',
+        name : 'Beau Jardin',
         latlng : {lat: 40.454828, lng: -86.920855},
         description : 'Home. Sweet home.',
         visible : true
     }, {
-        name : 'Lab',
+        name : 'Wetherill Lab of Chemistry',
         latlng : {lat: 40.426642, lng: -86.913394},
         description : 'The place I work.',
         visible : true
@@ -103,9 +103,13 @@ function initMap() {
       title: item.name
     });
     map.markerList.push(marker);
-    var contentStr =
+    var index = map.infowindowList.length;
+    var contentStr = '<div class=info-' + index.toString() + '>' +
       '<h5 class="info-title">' + item.name + '</h5>' +
-      '<div class="info-description">' + item.description + '</div>';
+      '<div class="info-description">' + item.description + '</div>' +
+      '<img class="info-img-' + index.toString() + '" src="" alt="image"></img>' +
+      '<p class="info-tel-address' + index.toString() + '"></p>' +
+      '</div>';
     var infowindow = new google.maps.InfoWindow({
       content: contentStr
     });
@@ -118,12 +122,12 @@ function initMap() {
       var oauth_timestamp = Math.round((new Date()).getTime() / 1000.0);
       var yelpTokenURL = "https://api.yelp.com/v2/search";
       var parameters = {
-        location: "Lafayette Indiana",
+        location: 'Lafayette Indiana',
+        term: item.name,
         cll: item.latlng.lat.toString() + "," + item.latlng.lng.toString(),
         oauth_consumer_key: 'cwAkA1CeBkJRJSLXkOSACA',
         oauth_token: 'kTvQQiFDp-nmuSo-9knHy8AJRYcSGHiO',
-        oauth_signature_method: 'hmac-sha1',
-        oauth_signature: 'lXPciYrzGzE5033h_acN0aazL7s',
+        oauth_signature_method: 'HMAC-SHA1',
         oauth_timestamp: oauth_timestamp,
         oauth_nonce: oauth_timestamp.toString(),
         oauth_version: '1.0',
@@ -139,10 +143,11 @@ function initMap() {
         cache: true,
         success: function(response) {
           console.log(response);
-          // infowindow.setContent(
-          //   infowindow.getContent() +
-          //   '<div class="info-yelp"></div>'
-          // );
+          $('.info-img-'+ index.toString()).attr('src', response.businesses[0].image_url);
+          $('.info-tel-address'+ index.toString()).html(
+            response.businesses[0].display_phone + '<br>' +
+            response.businesses[0].location.address[0]
+           );
         },
         dataType: 'jsonp',
         error: function() {
