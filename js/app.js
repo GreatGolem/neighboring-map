@@ -116,16 +116,21 @@ function initMap() {
       infowindow.open(map, marker);
       console.log(infowindow.getContent());
       var oauth_timestamp = Math.round((new Date()).getTime() / 1000.0);
-      var yelpTokenURL = "https://api.yelp.com/v2/search?location=Lafayette+Indiana&cll=" +
-        item.latlng.lat + "," + item.latlng.lng +
-        "&oauth_consumer_key=cwAkA1CeBkJRJSLXkOSACA" +
-        "&oauth_token=kTvQQiFDp-nmuSo-9knHy8AJRYcSGHiO" +
-        "&oauth_signature_method=hmac-sha1" +
-        "&oauth_signature=lXPciYrzGzE5033h_acN0aazL7s" +
-        "&oauth_timestamp=" + oauth_timestamp.toString() +
-        "&oauth_nonce=" + oauth_timestamp.toString();
+      var yelpTokenURL = "https://api.yelp.com/v2/search";
+      var parameters = {
+        location: "Lafayette Indiana",
+        cll: item.latlng.lat.toString() + "," + item.latlng.lng.toString(),
+        oauth_consumer_key: 'cwAkA1CeBkJRJSLXkOSACA',
+        oauth_token: 'kTvQQiFDp-nmuSo-9knHy8AJRYcSGHiO',
+        oauth_signature_method: 'hmac-sha1',
+        oauth_signature: 'lXPciYrzGzE5033h_acN0aazL7s',
+        oauth_timestamp: oauth_timestamp.toString(),
+        oauth_nonce: oauth_timestamp.toString(),
+        oauth_version: '1.0'
+      }
       $.ajax({
         url: yelpTokenURL,
+        data: parameters,
         success: function(response) {
           infowindow.setContent(
             infowindow.getContent() +
