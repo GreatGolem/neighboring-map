@@ -95,16 +95,39 @@ function initMap() {
   });
   map.markerList = [];
   map.infowindowList = [];
-  //add marker for each location and add infowindow to them.
+
+  //oauth signature preparation.
+  var oauth_timestamp = Math.round((new Date()).getTime() / 1000.0);
+  var yelpTokenURL = "https://api.yelp.com/v2/search";
+  var parameters = {
+    location: 'Lafayette Indiana',
+    oauth_consumer_key: 'cwAkA1CeBkJRJSLXkOSACA',
+    oauth_token: 'kTvQQiFDp-nmuSo-9knHy8AJRYcSGHiO',
+    oauth_nonce: oauth_timestamp.toString(),
+    oauth_timestamp: oauth_timestamp,
+    oauth_signature_method: 'HMAC-SHA1',
+    oauth_version: '1.0',
+    callback: 'cb'
+  }
+  var YELP_KEY_SECRET = 'Kc4ekvU3XtfSLHj44Q3QO7VbYzE';
+  var YELP_TOKEN_SECRET = 'lXPciYrzGzE5033h_acN0aazL7s';
+  var encodedSignature = oauthSignature.generate('GET',yelpTokenURL, parameters, YELP_KEY_SECRET, YELP_TOKEN_SECRET);
+  parameters.oauth_signature = encodedSignature;
+
+  //Loop through locations.
   data.locations.forEach(function(item) {
+
+    //Add marker to each location.
     var marker = new google.maps.Marker({
       position: item.latlng,
       map: map,
       title: item.name
     });
     map.markerList.push(marker);
+
+    //Add infowindow to each marker.
     var index = map.infowindowList.length;
-    var contentStr = '<div class=info-' + index.toString() + '>' +
+    var contentStr = '<div class=info>' +
       '<h5 class="info-title">' + item.name + '</h5>' +
       '<div class="info-description">' + item.description + '</div>' +
       '<img class="info-img-' + index.toString() + '" src="" alt="image"></img>' +
@@ -113,6 +136,39 @@ function initMap() {
     var infowindow = new google.maps.InfoWindow({
       content: contentStr
     });
+
+    //Add yelp information to each infowindow.
+    parameters.term = item.name;
+    parameters.cll = item.latlng.lat.toString() + "," + item.latlng.lng.toString();
+    (function(para) {
+      $.ajax({
+        url: yelpTokenURL,
+        data: para,
+        cache: true,
+        dataType: 'jsonp',
+        success: function(response) {
+          console.log(response);
+          if(response.businesses.length == 0) {
+            $('.info-img-'+ index.toString()).remove();
+            $('.info-tel-address'+ index.toString()).html('*No business information available.');
+            return;
+          };
+          if(!response.businesses[0].hasOwnProperty('image_url')) {
+            $('.info-img-'+ index.toString()).attr('src', 'img/noh-image.jpg');
+          } else {
+            $('.info-img-'+ index.toString()).attr('src', response.businesses[0].image_url);
+          };
+          $('.info-tel-address'+ index.toString()).html(
+            response.businesses[0].display_phone + '<br>' +
+            response.businesses[0].location.address[0]
+          );
+        },
+        error: function() {
+          console.log('error');
+        }
+      });
+    })(parameters);
+
     //When a marker is clicked map is refreshed first
     //then the infowindow is opened for that marker.
     marker.addListener('click', function(){
@@ -120,45 +176,10 @@ function initMap() {
       infowindow.open(map, marker);
       console.log(infowindow.getContent());
 
-      //Add yelp information to infowindow.
-      var oauth_timestamp = Math.round((new Date()).getTime() / 1000.0);
-      var yelpTokenURL = "https://api.yelp.com/v2/search";
-      var parameters = {
-        location: 'Lafayette Indiana',
-        term: item.name,
-        cll: item.latlng.lat.toString() + "," + item.latlng.lng.toString(),
-        oauth_consumer_key: 'cwAkA1CeBkJRJSLXkOSACA',
-        oauth_token: 'kTvQQiFDp-nmuSo-9knHy8AJRYcSGHiO',
-        oauth_signature_method: 'HMAC-SHA1',
-        oauth_timestamp: oauth_timestamp,
-        oauth_nonce: oauth_timestamp.toString(),
-        oauth_version: '1.0',
-        callback: 'cb'
-      }
-      var YELP_KEY_SECRET = 'Kc4ekvU3XtfSLHj44Q3QO7VbYzE';
-      var YELP_TOKEN_SECRET = 'lXPciYrzGzE5033h_acN0aazL7s';
-      var encodedSignature = oauthSignature.generate('GET',yelpTokenURL, parameters, YELP_KEY_SECRET, YELP_TOKEN_SECRET);
-      parameters.oauth_signature = encodedSignature;
-      $.ajax({
-        url: yelpTokenURL,
-        data: parameters,
-        cache: true,
-        success: function(response) {
-          console.log(response);
-          $('.info-img-'+ index.toString()).attr('src', response.businesses[0].image_url);
-          $('.info-tel-address'+ index.toString()).html(
-            response.businesses[0].display_phone + '<br>' +
-            response.businesses[0].location.address[0]
-           );
-        },
-        dataType: 'jsonp',
-        error: function() {
-          console.log('error');
-        }
-      });
     });
     map.infowindowList.push(infowindow);
   })
+
   //an update function to show/hide markers
   //and center the map to selected location
   map.update = function() {
