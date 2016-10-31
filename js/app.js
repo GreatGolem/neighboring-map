@@ -136,11 +136,38 @@ function initMap() {
     var infowindow = new google.maps.InfoWindow({
       content: contentStr
     });
+<<<<<<< HEAD
 
     //Add yelp information to each infowindow.
     parameters.term = item.name;
     parameters.cll = item.latlng.lat.toString() + "," + item.latlng.lng.toString();
     (function(para) {
+=======
+    //When a marker is clicked map is refreshed first
+    //then the infowindow is opened for that marker.
+    marker.addListener('click', function(){
+      map.clear();
+      infowindow.open(map, marker);
+      console.log(infowindow.getContent());
+      var oauth_timestamp = Math.round((new Date()).getTime() / 1000.0);
+      var yelpTokenURL = "https://api.yelp.com/v2/search";
+      var parameters = {
+        location: 'Lafayette Indiana',
+        term: item.name,
+        cll: item.latlng.lat.toString() + "," + item.latlng.lng.toString(),
+        oauth_consumer_key: 'cwAkA1CeBkJRJSLXkOSACA',
+        oauth_token: 'kTvQQiFDp-nmuSo-9knHy8AJRYcSGHiO',
+        oauth_signature_method: 'HMAC-SHA1',
+        oauth_timestamp: oauth_timestamp,
+        oauth_nonce: oauth_timestamp.toString(),
+        oauth_version: '1.0',
+        callback: 'cb'
+      }
+      var YELP_KEY_SECRET = 'Kc4ekvU3XtfSLHj44Q3QO7VbYzE';
+      var YELP_TOKEN_SECRET = 'lXPciYrzGzE5033h_acN0aazL7s';
+      var encodedSignature = oauthSignature.generate('GET',yelpTokenURL, parameters, YELP_KEY_SECRET, YELP_TOKEN_SECRET);
+      parameters.oauth_signature = encodedSignature;
+>>>>>>> parent of a7edc4c... note
       $.ajax({
         url: yelpTokenURL,
         data: para,
