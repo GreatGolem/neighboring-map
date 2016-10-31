@@ -119,6 +119,8 @@ function initMap() {
       map.clear();
       infowindow.open(map, marker);
       console.log(infowindow.getContent());
+
+      //Add yelp information to infowindow.
       var oauth_timestamp = Math.round((new Date()).getTime() / 1000.0);
       var yelpTokenURL = "https://api.yelp.com/v2/search";
       var parameters = {
