@@ -104,12 +104,9 @@ function initMap() {
     });
     map.markerList.push(marker);
     var index = map.infowindowList.length;
-    var contentStr = '<div class=info-' + index.toString() + '>' +
+    var contentStr =
       '<h5 class="info-title">' + item.name + '</h5>' +
-      '<div class="info-description">' + item.description + '</div>' +
-      '<img class="info-img-' + index.toString() + '" src="" alt="image"></img>' +
-      '<p class="info-tel-address' + index.toString() + '">place holder</p>' +
-      '</div>';
+      '<div class="info-description">' + item.description + '</div>';
     var infowindow = new google.maps.InfoWindow({
       content: contentStr
     });
@@ -140,13 +137,13 @@ function initMap() {
         cache: true,
         success: function(response) {
           console.log(response);
-          console.log(index);
-          console.log(contentStr);
-          $('.info-img-'+ index.toString()).attr('src', response.businesses[0].image_url);
-          $('.info-tel-address'+ index.toString()).html(
-            response.businesses[0].display_phone + '<br>' +
-            response.businesses[0].location.address[0]
-           );
+          // console.log(index);
+          // console.log(contentStr);
+          contentStr = contentStr +
+          '<img class="info-img-' + index.toString() + '" src="'+ response.businesses[0].image_url +'" alt="image"></img>' +
+          '<p class="info-tel-address-' + index.toString() + '">' + response.businesses[0].display_phone + '<br>' +
+          response.businesses[0].location.address[0] + '</p>';
+          infowindow.setContent(contentStr);
         },
         dataType: 'jsonp'
       });
@@ -163,7 +160,7 @@ function initMap() {
       console.log(infowindow.getContent());
     });
     map.infowindowList.push(infowindow);
-  })
+  });
   //an update function to show/hide markers
   //and center the map to selected location
   map.update = function() {
@@ -173,15 +170,15 @@ function initMap() {
         this.panTo(data.locations[i].latlng);
         this.infowindowList[i].open(map, map.markerList[i]);
         this.markerList[i].setAnimation(google.maps.Animation.BOUNCE);
-      }
-    }
-  }
+      };
+    };
+  };
 
   //a tool function to close all infowindows and cancel all animations
   map.clear = function() {
     for(i=0;i<data.locations.length;i++) {
       map.infowindowList[i].close();
       map.markerList[i].setAnimation();
-    }
-  }
-}
+    };
+  };
+};
