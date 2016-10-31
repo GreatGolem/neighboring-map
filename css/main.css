@@ -57,6 +57,7 @@ html, body {
   float: left;
   padding-top: 80px;
   background-color: orange;
+  position: relative;
 }
 
 .sidebar-hamburger {
@@ -92,6 +93,12 @@ html, body {
   margin: 0;
 }
 
-.info>img {
+.attribution {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+}
+
+.noh-image {
   width: 100px;
 }

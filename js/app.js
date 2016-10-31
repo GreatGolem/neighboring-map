@@ -106,7 +106,7 @@ function initMap() {
     var index = map.infowindowList.length;
     var contentStr =
       '<h5 class="info-title">' + item.name + '</h5>' +
-      '<div class="info-description">' + item.description + '</div>';
+      '<p class="info-description">' + item.description + '</p>';
     var infowindow = new google.maps.InfoWindow({
       content: contentStr
     });
@@ -139,10 +139,19 @@ function initMap() {
           console.log(response);
           // console.log(index);
           // console.log(contentStr);
-          contentStr = contentStr +
-          '<img class="info-img-' + index.toString() + '" src="'+ response.businesses[0].image_url +'" alt="image"></img>' +
-          '<p class="info-tel-address-' + index.toString() + '">' + response.businesses[0].display_phone + '<br>' +
-          response.businesses[0].location.address[0] + '</p>';
+          if(response.businesses.length == 0) {
+            yelpPhoto = '';
+            yelpStr = '<p>No business information available</p>';
+          } else if(typeof response.businesses[0].image_url == 'undefined') {
+            yelpPhoto = '<img class="noh-image info-img-' + index.toString() + '" src="img/noh-image.jpg" alt="image"></img>';
+            yelpStr = '<p class="info-tel-address-' + index.toString() + '">' + response.businesses[0].display_phone + '<br>' +
+              response.businesses[0].location.address[0] + '</p>';
+          } else {
+            yelpPhoto = '<img class="info-img-' + index.toString() + '" src="'+ response.businesses[0].image_url +'" alt="image"></img>';
+            yelpStr = '<p class="info-tel-address-' + index.toString() + '">' + response.businesses[0].display_phone + '<br>' +
+              response.businesses[0].location.address[0] + '</p>';
+          }
+          contentStr = contentStr + yelpPhoto + yelpStr;
           infowindow.setContent(contentStr);
         },
         dataType: 'jsonp'
