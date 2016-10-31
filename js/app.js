@@ -108,19 +108,14 @@ function initMap() {
       '<h5 class="info-title">' + item.name + '</h5>' +
       '<div class="info-description">' + item.description + '</div>' +
       '<img class="info-img-' + index.toString() + '" src="" alt="image"></img>' +
-      '<p class="info-tel-address' + index.toString() + '"></p>' +
+      '<p class="info-tel-address' + index.toString() + '">place holder</p>' +
       '</div>';
     var infowindow = new google.maps.InfoWindow({
       content: contentStr
     });
-    //When a marker is clicked map is refreshed first
-    //then the infowindow is opened for that marker.
-    marker.addListener('click', function(){
-      map.clear();
-      infowindow.open(map, marker);
-      console.log(infowindow.getContent());
 
-      //Add yelp information to infowindow.
+    //a helper function for yelp api request
+    map.yelpAjax = function(item,index) {
       var oauth_timestamp = Math.round((new Date()).getTime() / 1000.0);
       var yelpTokenURL = "https://api.yelp.com/v2/search";
       var parameters = {
@@ -145,17 +140,27 @@ function initMap() {
         cache: true,
         success: function(response) {
           console.log(response);
+          console.log(index);
+          console.log(contentStr);
           $('.info-img-'+ index.toString()).attr('src', response.businesses[0].image_url);
           $('.info-tel-address'+ index.toString()).html(
             response.businesses[0].display_phone + '<br>' +
             response.businesses[0].location.address[0]
            );
         },
-        dataType: 'jsonp',
-        error: function() {
-          console.log('error');
-        }
+        dataType: 'jsonp'
       });
+    }
+
+    //Add yelp information to infowindow.
+    map.yelpAjax(item,index);
+
+    //When a marker is clicked map is refreshed first
+    //then the infowindow is opened for that marker.
+    marker.addListener('click', function(){
+      map.clear();
+      infowindow.open(map, marker);
+      console.log(infowindow.getContent());
     });
     map.infowindowList.push(infowindow);
   })
