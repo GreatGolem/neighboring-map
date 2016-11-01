@@ -95,6 +95,7 @@ function initMap() {
   });
   map.markerList = [];
   map.infowindowList = [];
+
   //add marker for each location and add infowindow to them.
   data.locations.forEach(function(item) {
     var marker = new google.maps.Marker({
@@ -131,6 +132,16 @@ function initMap() {
       var YELP_TOKEN_SECRET = 'lXPciYrzGzE5033h_acN0aazL7s';
       var encodedSignature = oauthSignature.generate('GET',yelpTokenURL, parameters, YELP_KEY_SECRET, YELP_TOKEN_SECRET);
       parameters.oauth_signature = encodedSignature;
+
+      //set timeout to handle error.
+      console.log('timer' + index.toString() + ' start');
+      var yelpTimeout = setTimeout(function() {
+        yelpStr = '<p>Fail to get yelp resources.</p>';
+        contentStr = contentStr + yelpStr;
+        infowindow.setContent(contentStr);
+        console.log('timer' + index.toString() + ' end');
+      },8000);
+
       $.ajax({
         url: yelpTokenURL,
         data: parameters,
@@ -153,6 +164,7 @@ function initMap() {
           }
           contentStr = contentStr + yelpPhoto + yelpStr;
           infowindow.setContent(contentStr);
+          clearTimeout(yelpTimeout);
         },
         dataType: 'jsonp'
       });
