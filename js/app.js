@@ -162,9 +162,8 @@ function initMap() {
     //When a marker is clicked map is refreshed first
     //then the infowindow is opened for that marker.
     marker.addListener('click', function(){
-      map.clear();
-      infowindow.open(map, marker);
-      console.log(infowindow.getContent());
+      data.selected = item.name;
+      map.update();
     });
   });
 
