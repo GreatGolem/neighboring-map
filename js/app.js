@@ -5,31 +5,38 @@ var data = {
     {
         name : 'Beau Jardin',
         latlng : {lat: 40.454828, lng: -86.920855},
-        description : 'Home. Sweet home.'
+        description : 'Home. Sweet home.',
+        visible : true
     }, {
         name : 'Wetherill Lab of Chemistry',
         latlng : {lat: 40.426642, lng: -86.913394},
         description : 'The place I work.',
+        visible : true
     }, {
         name : 'Payless',
         latlng : {lat: 40.455023, lng: -86.917591},
-        description : 'The closest supermarket to my home.'
+        description : 'The closest supermarket to my home.',
+        visible : true
     }, {
         name : 'Walmart',
         latlng : {lat: 40.457091, lng: -86.933015},
-        description : 'A larger supermarket close to my home.'
+        description : 'A larger supermarket close to my home.',
+        visible : true
     }, {
         name : 'Purdue Memorial Union',
         latlng : {lat: 40.424700, lng: -86.911325},
-        description : 'Filled with restaurants and other random facilities.'
+        description : 'Filled with restaurants and other random facilities.',
+        visible : true
     }, {
         name : 'Yichiban',
         latlng : {lat: 40.417147, lng: -86.893190},
         description : 'Best Chinese restaurant in town.',
+        visible : true
     }, {
         name : 'C&T Market',
         latlng : {lat: 40.423287, lng: -86.899522},
-        description : 'A small Chinese supermarket with nice meat and snack supply.'
+        description : 'A small Chinese supermarket with nice meat and snack supply.',
+        visible : true
     }
   ]
 }
@@ -47,12 +54,20 @@ var ViewModel = function() {
     map.update();
   };
   this.keyword = ko.observable('');
-
-  this.locList().forEach(function(item) {
-    item.visible = ko.computed( function() {
-      return item.name.toLowerCase().includes(self.keyword().toLowerCase());
+  //a function trigger everytime something entered in filter box
+  //and hide all non-matching list items
+  this.filter = function() {
+    $('li').show();
+    map.markerList.forEach(function(marker){
+      marker.setOpacity(1);
     });
-  });
+    for(i=0;i<data.locations.length;i++) {
+      if(!data.locations[i].name.toLowerCase().includes(self.keyword().toLowerCase())) {
+        $('li:nth-child(' + parseInt(i+1) + ')').hide();
+        map.markerList[i].setOpacity(0.3);
+      }
+    }
+  }
 };
 ko.applyBindings(VW = new ViewModel());
 
