@@ -1,19 +1,3 @@
-//An ajax call to update list of location with the json data file.
-//It failed badly so I give it up and just put data in js file directly.
-
-// $.getJSON("locations.json", function(json) {
-//   console.log(json);
-//   //Add locations to the list and add marker to the map.
-//   json.forEach(function(locItem){
-//     VW.locList.push(locItem);
-//     var marker = new google.maps.Marker({
-//       position: locItem.latlng,
-//       map: initMap()
-//     });
-//   });
-// });
-
-
 //Here's the model.
 var data = {
   selected: 'NA',
@@ -98,19 +82,20 @@ function initMap() {
 
   //add marker for each location and add infowindow to them.
   data.locations.forEach(function(item) {
+    var index = map.infowindowList.length;
     var marker = new google.maps.Marker({
       position: item.latlng,
       map: map,
       title: item.name
     });
     map.markerList.push(marker);
-    var index = map.infowindowList.length;
     var contentStr =
       '<h5 class="info-title">' + item.name + '</h5>' +
       '<p class="info-description">' + item.description + '</p>';
     var infowindow = new google.maps.InfoWindow({
       content: contentStr
     });
+    map.infowindowList.push(infowindow);
 
     //a helper function for yelp api request
     map.yelpAjax = function(item,index) {
@@ -180,8 +165,8 @@ function initMap() {
       infowindow.open(map, marker);
       console.log(infowindow.getContent());
     });
-    map.infowindowList.push(infowindow);
   });
+  
   //an update function to show/hide markers
   //and center the map to selected location
   map.update = function() {
