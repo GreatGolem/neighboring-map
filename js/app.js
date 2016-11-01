@@ -45,8 +45,9 @@ var data = {
 var ViewModel = function() {
   var self = this;
   this.locList = ko.observableArray(data.locations);
-  this.expand = function() {
-    $('#sidebar').toggleClass('expand');
+  this.sideBarExpand = ko.observable(true);
+  this.toggleSideBar = function() {
+    self.sideBarExpand(!self.sideBarExpand());
   };
   this.select = function(locItem) {
     data.selected = locItem.name;
@@ -166,7 +167,7 @@ function initMap() {
       console.log(infowindow.getContent());
     });
   });
-  
+
   //an update function to show/hide markers
   //and center the map to selected location
   map.update = function() {

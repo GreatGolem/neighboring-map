@@ -11,7 +11,7 @@
 <body>
   <div class="wrapper">
     <div id="map"></div>
-    <div class="sidebar expand" id="sidebar">
+    <div class="sidebar" data-bind="css: { expand: sideBarExpand() }" id="sidebar">
       <div class="sidebar-content">
         <h3 class="title"><b>
           <p id="line1">My Map of</p>
@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="sidebar-hamburger">
-        <button class="hbg-button" data-bind="click: expand">
+        <button class="hbg-button" data-bind="click: toggleSideBar">
           <img id="hbg-icon" src="img/hbg-icon.png" alt="hamburger icon" />
         </button>
       </div>
