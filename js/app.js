@@ -9,7 +9,7 @@ var data = {
     }, {
         name : 'Wetherill Lab of Chemistry',
         latlng : {lat: 40.426642, lng: -86.913394},
-        description : 'The place I work.',
+        description : 'The place I work.'
     }, {
         name : 'Payless',
         latlng : {lat: 40.455023, lng: -86.917591},
@@ -51,7 +51,8 @@ var ViewModel = function() {
   for(i=0;i<data.locations.length;i++) {
     (function(j) {
       self.locList()[j].visible = ko.computed( function() {
-        var filterResult = self.locList()[j].name.toLowerCase().includes(self.keyword().toLowerCase());
+        var filterResult = compareStr(self.locList()[j].name.toLowerCase(), self.keyword().toLowerCase());
+        console.log(filterResult);
         if(filterResult) {
           map.markerList[j].setOpacity(1);
         } else {
@@ -61,14 +62,6 @@ var ViewModel = function() {
       });
     })(i);
   };
-
-  // this.locList().forEach(function(item) {
-  //   item.visible = ko.computed( function() {
-  //     console.log('compute ',item.name);
-  //
-  //     return item.name.toLowerCase().includes(self.keyword().toLowerCase());
-  //   });
-  // });
 };
 
 //Initialize google map.
@@ -165,7 +158,7 @@ function initMap() {
       data.selected = item.name;
       map.update();
     });
-    
+
     //Stop marker animation when infowindow closed.
     google.maps.event.addListener(infowindow, 'closeclick', function() {
       marker.setAnimation();
@@ -193,4 +186,19 @@ function initMap() {
     };
   };
   ko.applyBindings(VW = new ViewModel());
+};
+
+//A helper function to check whether a string contains another string.
+var compareStr = function(message, keyword) {
+  console.log('compare ', message + ' ' + keyword);
+  var l = keyword.length;
+  if(l > message.length) {
+    return false;
+  };
+  for(k=0;k+l<=message.length;k++) {
+    if(message.substring(k,k+l) == keyword) {
+      return true;
+    };
+  };
+  return false;
 };
