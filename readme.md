@@ -5,6 +5,7 @@
 3. Use bash command **python -m SimpleHTTPServer 8000** under project directory to host the site locally.
 4. Visit the site from browser with address: **localhost:8000**.
 5. You can also visit github page of this repo: https://greatgolem.github.io/neighboring-map/
+
 ## Attributes
 Google map javascript api
 
