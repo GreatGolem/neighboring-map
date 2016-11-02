@@ -32,7 +32,7 @@ var data = {
         description : 'A small Chinese supermarket with nice meat and snack supply.'
     }
   ]
-}
+};
 
 //Here's the viewmodel.
 var ViewModel = function() {
@@ -44,7 +44,7 @@ var ViewModel = function() {
   };
   this.select = function(locItem) {
     data.selected = locItem.name;
-    map.update();
+    if(map !== undefined) {map.update();}
   };
   this.keyword = ko.observable('');
 
@@ -52,16 +52,15 @@ var ViewModel = function() {
     (function(j) {
       self.locList()[j].visible = ko.computed( function() {
         var filterResult = compareStr(self.locList()[j].name.toLowerCase(), self.keyword().toLowerCase());
-        console.log(filterResult);
-        if(filterResult) {
+        if(filterResult && map !== undefined) {
           map.markerList[j].setOpacity(1);
-        } else {
+        } else if(map !== undefined) {
           map.markerList[j].setOpacity(0.3);
-        };
+        }
         return filterResult;
       });
     })(i);
-  };
+  }
 };
 
 //Initialize google map.
@@ -106,29 +105,17 @@ function initMap() {
         oauth_nonce: oauth_timestamp.toString(),
         oauth_version: '1.0',
         callback: 'cb'
-      }
+      };
       var YELP_KEY_SECRET = 'Kc4ekvU3XtfSLHj44Q3QO7VbYzE';
       var YELP_TOKEN_SECRET = 'lXPciYrzGzE5033h_acN0aazL7s';
       var encodedSignature = oauthSignature.generate('GET',yelpTokenURL, parameters, YELP_KEY_SECRET, YELP_TOKEN_SECRET);
       parameters.oauth_signature = encodedSignature;
-
-      //set timeout to handle error.
-      console.log('timer' + index.toString() + ' start');
-      var yelpTimeout = setTimeout(function() {
-        yelpStr = '<p>Fail to get yelp resources.</p>';
-        contentStr = contentStr + yelpStr;
-        infowindow.setContent(contentStr);
-        console.log('timer' + index.toString() + ' end');
-      },8000);
 
       $.ajax({
         url: yelpTokenURL,
         data: parameters,
         cache: true,
         success: function(response) {
-          console.log(response);
-          // console.log(index);
-          // console.log(contentStr);
           if(response.businesses.length == 0) {
             yelpPhoto = '';
             yelpStr = '<p>No business information available</p>';
@@ -143,11 +130,14 @@ function initMap() {
           }
           contentStr = contentStr + yelpPhoto + yelpStr;
           infowindow.setContent(contentStr);
-          clearTimeout(yelpTimeout);
         },
         dataType: 'jsonp'
+      }).fail( function() {
+        yelpStr = '<p>Fail to get yelp resources.</p>';
+        contentStr = contentStr + yelpStr;
+        infowindow.setContent(contentStr);
       });
-    }
+    };
 
     //Add yelp information to infowindow.
     map.yelpAjax(item,index);
@@ -174,8 +164,8 @@ function initMap() {
         this.panTo(data.locations[i].latlng);
         this.infowindowList[i].open(map, map.markerList[i]);
         this.markerList[i].setAnimation(google.maps.Animation.BOUNCE);
-      };
-    };
+      }
+    }
   };
 
   //a tool function to close all infowindows and cancel all animations
@@ -183,22 +173,26 @@ function initMap() {
     for(i=0;i<data.locations.length;i++) {
       map.infowindowList[i].close();
       map.markerList[i].setAnimation();
-    };
+    }
   };
   ko.applyBindings(VW = new ViewModel());
 };
 
 //A helper function to check whether a string contains another string.
 var compareStr = function(message, keyword) {
-  console.log('compare ', message + ' ' + keyword);
   var l = keyword.length;
   if(l > message.length) {
     return false;
-  };
+  }
   for(k=0;k+l<=message.length;k++) {
     if(message.substring(k,k+l) == keyword) {
       return true;
-    };
-  };
+    }
+  }
   return false;
+};
+
+//Error handler for google map api
+var googleError = function() {
+  alert('Google map currently not available!');
 };
