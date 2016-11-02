@@ -19,10 +19,10 @@
         </b></h3>
         <div id="searchdiv">
           Filter locations:
-          <textarea data-bind="textInput: keyword, event: {keyup: filter}" id="filter" cols="18" rows="1"></textarea>
+          <textarea data-bind="textInput: keyword" id="filter" cols="18" rows="1"></textarea>
         </div>
         <ul id="locList" data-bind="foreach: locList">
-          <li class="location-list-item">
+          <li class="location-list-item" data-bind="visible: visible">
             <button class="list-item" data-bind="text: name, click: $parent.select"></button>
           </li>
         </ul>

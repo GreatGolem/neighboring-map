@@ -5,38 +5,31 @@ var data = {
     {
         name : 'Beau Jardin',
         latlng : {lat: 40.454828, lng: -86.920855},
-        description : 'Home. Sweet home.',
-        visible : true
+        description : 'Home. Sweet home.'
     }, {
         name : 'Wetherill Lab of Chemistry',
         latlng : {lat: 40.426642, lng: -86.913394},
         description : 'The place I work.',
-        visible : true
     }, {
         name : 'Payless',
         latlng : {lat: 40.455023, lng: -86.917591},
-        description : 'The closest supermarket to my home.',
-        visible : true
+        description : 'The closest supermarket to my home.'
     }, {
         name : 'Walmart',
         latlng : {lat: 40.457091, lng: -86.933015},
-        description : 'A larger supermarket close to my home.',
-        visible : true
+        description : 'A larger supermarket close to my home.'
     }, {
         name : 'Purdue Memorial Union',
         latlng : {lat: 40.424700, lng: -86.911325},
-        description : 'Filled with restaurants and other random facilities.',
-        visible : true
+        description : 'Filled with restaurants and other random facilities.'
     }, {
         name : 'Yichiban',
         latlng : {lat: 40.417147, lng: -86.893190},
         description : 'Best Chinese restaurant in town.',
-        visible : true
     }, {
         name : 'C&T Market',
         latlng : {lat: 40.423287, lng: -86.899522},
-        description : 'A small Chinese supermarket with nice meat and snack supply.',
-        visible : true
+        description : 'A small Chinese supermarket with nice meat and snack supply.'
     }
   ]
 }
@@ -54,22 +47,29 @@ var ViewModel = function() {
     map.update();
   };
   this.keyword = ko.observable('');
-  //a function trigger everytime something entered in filter box
-  //and hide all non-matching list items
-  this.filter = function() {
-    $('li').show();
-    map.markerList.forEach(function(marker){
-      marker.setOpacity(1);
-    });
-    for(i=0;i<data.locations.length;i++) {
-      if(!data.locations[i].name.toLowerCase().includes(self.keyword().toLowerCase())) {
-        $('li:nth-child(' + parseInt(i+1) + ')').hide();
-        map.markerList[i].setOpacity(0.3);
-      }
-    }
-  }
+
+  for(i=0;i<data.locations.length;i++) {
+    (function(j) {
+      self.locList()[j].visible = ko.computed( function() {
+        var filterResult = self.locList()[j].name.toLowerCase().includes(self.keyword().toLowerCase());
+        if(filterResult) {
+          map.markerList[j].setOpacity(1);
+        } else {
+          map.markerList[j].setOpacity(0.3);
+        };
+        return filterResult;
+      });
+    })(i);
+  };
+
+  // this.locList().forEach(function(item) {
+  //   item.visible = ko.computed( function() {
+  //     console.log('compute ',item.name);
+  //
+  //     return item.name.toLowerCase().includes(self.keyword().toLowerCase());
+  //   });
+  // });
 };
-ko.applyBindings(VW = new ViewModel());
 
 //Initialize google map.
 function initMap() {
@@ -165,6 +165,11 @@ function initMap() {
       data.selected = item.name;
       map.update();
     });
+    
+    //Stop marker animation when infowindow closed.
+    google.maps.event.addListener(infowindow, 'closeclick', function() {
+      marker.setAnimation();
+    });
   });
 
   //an update function to show/hide markers
@@ -187,4 +192,5 @@ function initMap() {
       map.markerList[i].setAnimation();
     };
   };
+  ko.applyBindings(VW = new ViewModel());
 };
